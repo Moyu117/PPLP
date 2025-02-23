@@ -1,23 +1,70 @@
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DrawingFrame extends Frame {
 
     private final List<Shape2D> shapes = new ArrayList<>();
-    private static final double BASE_SCALE_FACTOR = 30.0; // 基础放大倍数（比如 2 倍、3 倍）
+    private static final double BASE_SCALE_FACTOR = 100; // 直接放大 20 倍
+    private static final int INIT_WIDTH = 800;
+    private static final int INIT_HEIGHT = 600;
+
+    private int offsetX = 0;
+    private int offsetY = 0;
+    private int lastMouseX, lastMouseY;
+    private boolean showOnlyVertices = false; // 只显示顶点
+    private boolean fillPolygons = false; // 是否填充图形内部空白区域
 
     public DrawingFrame(String title) {
         super(title);
-        setSize(800, 600);
+        setSize(INIT_WIDTH, INIT_HEIGHT);
+
+        // **鼠标拖拽功能**
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                int dx = e.getX() - lastMouseX;
+                int dy = e.getY() - lastMouseY;
+                offsetX += dx;
+                offsetY += dy;
+
+                lastMouseX = e.getX();
+                lastMouseY = e.getY();
+
+                repaint();
+            }
+        });
+
+        // **键盘快捷键**
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() == 'v') { // 按 'v' 只显示顶点
+                    showOnlyVertices = !showOnlyVertices;
+                    repaint();
+                } else if (e.getKeyChar() == 'f') { // 按 'f' 填充空白区域
+                    fillPolygons = !fillPolygons;
+                    repaint();
+                }
+            }
+        });
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
+
         setVisible(true);
     }
 
@@ -34,21 +81,20 @@ public class DrawingFrame extends Frame {
 
         int width = getWidth();
         int height = getHeight();
-        int centerX = width / 2;
-        int centerY = height / 2;
+        int centerX = width / 2 + offsetX;
+        int centerY = height / 2 + offsetY;
 
-        // **计算随窗口变化的 SCALE_FACTOR**
-        double scaleX = (width / 200.0) * BASE_SCALE_FACTOR;
-        double scaleY = (height / 200.0) * BASE_SCALE_FACTOR;
-        double SCALE_FACTOR = Math.min(scaleX, scaleY); // 保持比例不变
+        double scaleX = (width / (double) INIT_WIDTH) * BASE_SCALE_FACTOR;
+        double scaleY = (height / (double) INIT_HEIGHT) * BASE_SCALE_FACTOR;
+        double SCALE_FACTOR = Math.min(scaleX, scaleY);
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // **绘制坐标系**
+        // **绘制坐标轴**
         g2.setColor(Color.LIGHT_GRAY);
-        g2.drawLine(0, centerY, width, centerY); // X轴
-        g2.drawLine(centerX, 0, centerX, height); // Y轴
+        g2.drawLine(0, centerY, width, centerY);
+        g2.drawLine(centerX, 0, centerX, height);
 
         final List<Shape2D> snapshot;
         synchronized (shapes) {
@@ -60,19 +106,23 @@ public class DrawingFrame extends Frame {
         }
 
         for (Shape2D s : snapshot) {
-            g2.setColor(parseColor(s.color));
             switch (s.type) {
                 case POINT:
+                    g2.setColor(parseColor(s.color));
                     drawPoint(g2, s.xs[0], s.ys[0], centerX, centerY, SCALE_FACTOR);
                     break;
                 case SEGMENT:
-                    drawSegment(g2, s.xs, s.ys, centerX, centerY, SCALE_FACTOR);
+                    if (!showOnlyVertices) {
+                        g2.setColor(parseColor(s.color));
+                        drawSegment(g2, s.xs, s.ys, centerX, centerY, SCALE_FACTOR);
+                    }
                     break;
                 case CERCLE:
+                    g2.setColor(parseColor(s.color));
                     drawCircle(g2, s.xs, s.ys, centerX, centerY, SCALE_FACTOR);
                     break;
                 case POLYGONE:
-                    drawPolygon(g2, s.xs, s.ys, centerX, centerY, SCALE_FACTOR);
+                    drawPolygon(g2, s, centerX, centerY, SCALE_FACTOR);
                     break;
             }
         }
@@ -81,7 +131,7 @@ public class DrawingFrame extends Frame {
     private void drawPoint(Graphics g, double x, double y, int centerX, int centerY, double scaleFactor) {
         int px = (int) (centerX + x * scaleFactor);
         int py = (int) (centerY - y * scaleFactor);
-        g.fillOval(px, py, 1, 1); // 保持点大小为 1x1
+        g.fillOval(px, py, 1, 1);
     }
 
     private void drawSegment(Graphics g, double[] xs, double[] ys, int centerX, int centerY, double scaleFactor) {
@@ -102,15 +152,34 @@ public class DrawingFrame extends Frame {
         g.drawOval(left, top, diam, diam);
     }
 
-    private void drawPolygon(Graphics g, double[] xs, double[] ys, int centerX, int centerY, double scaleFactor) {
-        int n = xs.length;
+    private void drawPolygon(Graphics g, Shape2D s, int centerX, int centerY, double scaleFactor) {
+        int n = s.xs.length;
         int[] xPoints = new int[n];
         int[] yPoints = new int[n];
+
         for (int i = 0; i < n; i++) {
-            xPoints[i] = (int) (centerX + xs[i] * scaleFactor);
-            yPoints[i] = (int) (centerY - ys[i] * scaleFactor);
+            xPoints[i] = (int) (centerX + s.xs[i] * scaleFactor);
+            yPoints[i] = (int) (centerY - s.ys[i] * scaleFactor);
         }
-        g.drawPolygon(xPoints, yPoints, n);
+
+        if (fillPolygons) {
+            g.setColor(Color.BLUE); // 仅填充内部
+            g.fillPolygon(xPoints, yPoints, n);
+        }
+
+        // **保持原始边框颜色**
+        if (!showOnlyVertices) {
+            g.setColor(parseColor(s.color));
+            g.drawPolygon(xPoints, yPoints, n);
+        }
+
+        // **如果启用了“只显示顶点”模式**
+        if (showOnlyVertices) {
+            g.setColor(parseColor(s.color)); // 保持点的颜色
+            for (int i = 0; i < n; i++) {
+                g.fillOval(xPoints[i], yPoints[i], 1, 1);
+            }
+        }
     }
 
     private Color parseColor(String col) {
