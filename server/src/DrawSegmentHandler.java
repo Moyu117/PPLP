@@ -7,9 +7,6 @@ public class DrawSegmentHandler extends RequestHandler {
     @Override
     public void handle(String request) {
         if (request.startsWith("DRAW_SEGMENT")) {
-            System.out.println("Handling in DrawSegmentHandler: " + request);
-
-            // 协议：DRAW_SEGMENT x1 y1 x2 y2 color
             String[] parts = request.split("\\s+");
             if (parts.length == 6) {
                 try {
@@ -26,7 +23,7 @@ public class DrawSegmentHandler extends RequestHandler {
                     drawingFrame.addShape(shape);
 
                 } catch (NumberFormatException e) {
-                    System.out.println("NumberFormatException in DrawSegmentHandler: " + e.getMessage());
+                    System.out.println("Error in DrawSegmentHandler: " + e.getMessage());
                 }
             }
         } else {

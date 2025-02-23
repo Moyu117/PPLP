@@ -7,9 +7,6 @@ public class DrawPolygoneHandler extends RequestHandler {
     @Override
     public void handle(String request) {
         if (request.startsWith("DRAW_POLYGONE")) {
-            System.out.println("Handling in DrawPolygoneHandler: " + request);
-
-            // 协议: DRAW_POLYGONE n x1 y1 ... xn yn color
             String[] parts = request.split("\\s+");
             if (parts.length >= 3) {
                 try {
@@ -31,13 +28,9 @@ public class DrawPolygoneHandler extends RequestHandler {
                         shape.ys = ys;
 
                         drawingFrame.addShape(shape);
-
-                    } else {
-                        System.out.println("Error in DrawPolygoneHandler: length mismatch. " +
-                                "Got " + parts.length + ", expected " + expectedLength);
                     }
                 } catch (NumberFormatException e) {
-                    System.out.println("NumberFormatException in DrawPolygoneHandler: " + e.getMessage());
+                    System.out.println("Error in DrawPolygoneHandler: " + e.getMessage());
                 }
             }
         } else {
