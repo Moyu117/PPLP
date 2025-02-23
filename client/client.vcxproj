@@ -146,12 +146,14 @@
     <ClInclude Include="NetworkInitializer.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Polygone.h" />
+    <ClInclude Include="RotationTransformation.h" />
     <ClInclude Include="SauvegardeTexteVisitor.h" />
     <ClInclude Include="SauvegardeVisitor.h" />
     <ClInclude Include="Segment.h" />
     <ClInclude Include="Transformation.h" />
     <ClInclude Include="Translation.h" />
     <ClInclude Include="Vecteur2D.h" />
+    <ClInclude Include="ScaleTransformation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DrawTCPVisitor.cpp" />
@@ -160,7 +162,9 @@
     <ClCompile Include="NetworkInitializer.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Polygone.cpp" />
+    <ClCompile Include="RotationTransformation.cpp" />
     <ClCompile Include="SauvegardeTexteVisitor.cpp" />
+    <ClCompile Include="ScaleTransformation.cpp" />
     <ClCompile Include="Segment.cpp" />
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="Translation.cpp" />

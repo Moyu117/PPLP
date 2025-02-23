@@ -4,10 +4,6 @@
 #include "Polygone.h"
 #include "Groupe.h"
 
-Translation::Translation(const Vecteur2D& dep)
-    : deplacement(dep)
-{}
-
 void Translation::appliquer(Point& p) const {
     p.setPosition(p.getPosition() + deplacement);
 }

@@ -1,14 +1,14 @@
-#ifndef TRANSLATION_H
-#define TRANSLATION_H
+#ifndef SCALETRANSFORMATION_H
+#define SCALETRANSFORMATION_H
 
 #include "Transformation.h"
 #include "Vecteur2D.h"
 
-class Translation : public Transformation {
+class ScaleTransformation : public Transformation {
 private:
-    Vecteur2D deplacement;
+    double scaleFactor; // Ëõ·Å±¶Êý
 public:
-    explicit Translation(const Vecteur2D& dep) : deplacement(dep) {}
+    explicit ScaleTransformation(double scale) : scaleFactor(scale) {}
 
     void appliquer(Point& p) const override;
     void appliquer(Segment& s) const override;
