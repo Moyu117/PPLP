@@ -25,9 +25,12 @@ SRCS = main.cpp \
        Groupe.cpp \
        Transformation.cpp \
        Translation.cpp \
+       ScaleTransformation.cpp \
+       RotationTransformation.cpp \
        DrawTCPVisitor.cpp \
        SauvegardeTexteVisitor.cpp \
        NetworkInitializer.cpp
+
 
 # Génère la liste des .o correspondants
 OBJS = $(SRCS:.cpp=.o)
