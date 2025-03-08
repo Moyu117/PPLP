@@ -13,7 +13,7 @@ Polygone::Polygone(const std::vector<Vecteur2D>& pts, const std::string& couleur
 Polygone::~Polygone() {}
 
 double Polygone::aire() const {
-    // 常见Shoelace Formula (卷线公式)
+    // surface:Shoelace Formula 
     double area = 0.0;
     int n = (int)points.size();
     if (n < 3) return 0.0;

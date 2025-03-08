@@ -5,9 +5,10 @@ class Point;
 class Segment;
 class Polygone;
 class Groupe;
+class Cercle;
 
 /**
- * 如果还有Cercle等，也需要在此声明
+ * si ajouter d'autre forme,ajouter ici
  */
 
 class Transformation {
@@ -18,8 +19,8 @@ public:
     virtual void appliquer(Segment& s) const = 0;
     virtual void appliquer(Polygone& p) const = 0;
     virtual void appliquer(Groupe& g) const = 0;
-
-    // 若还有其他形状(如 Cercle), 亦需加相应函数
+    virtual void appliquer(Cercle& g) const = 0;
+    //ajouter fonction
 };
 
 #endif

@@ -3,13 +3,14 @@
 #include "Segment.h"
 #include "Polygone.h"
 #include "Groupe.h"
+#include "Cercle.h"
 
 SauvegardeTexteVisitor::SauvegardeTexteVisitor(std::ofstream& ofs)
     : out(ofs)
 {}
 
 void SauvegardeTexteVisitor::visit(const Point& p) {
-    // 格式: Point x y color
+    //  Point x y color
     out << "Point "
         << p.getPosition().x << " "
         << p.getPosition().y << " "
@@ -17,7 +18,7 @@ void SauvegardeTexteVisitor::visit(const Point& p) {
 }
 
 void SauvegardeTexteVisitor::visit(const Segment& s) {
-    // 格式: Segment x1 y1 x2 y2 color
+    //  Segment x1 y1 x2 y2 color
     out << "Segment "
         << s.getP1().x << " " << s.getP1().y << " "
         << s.getP2().x << " " << s.getP2().y << " "
@@ -25,7 +26,7 @@ void SauvegardeTexteVisitor::visit(const Segment& s) {
 }
 
 void SauvegardeTexteVisitor::visit(const Polygone& poly) {
-    // 格式: Polygone n x1 y1 ... xn yn color
+    //  Polygone n x1 y1 ... xn yn color
     auto& pts = poly.getPoints();
     out << "Polygone " << pts.size();
     for (auto& pt : pts) {
@@ -41,4 +42,9 @@ void SauvegardeTexteVisitor::visit(const Groupe& g) {
         f->sauvegarder(*this);
     }
     out << "EndGroupe" << std::endl;
+}
+
+//cercle: CERCLE x y R color
+void SauvegardeTexteVisitor::visit(const Cercle& c) {
+    out << "CERCLE " << c.getCentre().x << " " << c.getCentre().y << " " << c.getRayon() << " " << c.getCouleur() << std::endl;
 }

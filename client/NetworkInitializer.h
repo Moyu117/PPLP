@@ -24,7 +24,7 @@ private:
 public:
     static NetworkInitializer* getInstance();
 
-    // ½û¿½±´
+   
     NetworkInitializer(const NetworkInitializer&) = delete;
     NetworkInitializer& operator=(const NetworkInitializer&) = delete;
 };

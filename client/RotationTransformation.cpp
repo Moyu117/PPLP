@@ -7,11 +7,12 @@
 #include "Segment.h"
 #include "Polygone.h"
 #include "Groupe.h"
+#include "Cercle.h"
 
 RotationTransformation::RotationTransformation(const Vecteur2D& c, double angleDeg)
-    : center(c), angleRad(angleDeg* M_PI / 180.0) {}  // 角度转弧度
+    : center(c), angleRad(angleDeg* M_PI / 180.0) {}  // angle
 
-// **旋转单个点**
+// **rotation point**
 void RotationTransformation::appliquer(Point& p) const {
     Vecteur2D pos = p.getPosition();
     double x = pos.x - center.x;
@@ -23,7 +24,7 @@ void RotationTransformation::appliquer(Point& p) const {
     p.setPosition(Vecteur2D(center.x + newX, center.y + newY));
 }
 
-// **旋转线段**
+// **rotation ligne**
 void RotationTransformation::appliquer(Segment& s) const {
     s.setP1(Vecteur2D(
         center.x + (s.getP1().x - center.x) * cos(angleRad) - (s.getP1().y - center.y) * sin(angleRad),
@@ -36,7 +37,7 @@ void RotationTransformation::appliquer(Segment& s) const {
     ));
 }
 
-// **旋转多边形**
+// **rotation poly**
 void RotationTransformation::appliquer(Polygone& poly) const {
     auto& pts = poly.getPoints();
     for (auto& pt : pts) {
@@ -48,7 +49,18 @@ void RotationTransformation::appliquer(Polygone& poly) const {
     }
 }
 
-// **旋转整个组**
+void RotationTransformation::appliquer(Cercle& c) const {
+    Vecteur2D centre = c.getCentre();
+    double x = centre.x - this->center.x;
+    double y = centre.y - this->center.y;
+    double newX = x * cos(angleRad) - y * sin(angleRad);
+    double newY = x * sin(angleRad) + y * cos(angleRad);
+    c.setCentre(Vecteur2D(this->center.x + newX, this->center.y + newY));
+}
+
+
+
+// **rotation group**
 void RotationTransformation::appliquer(Groupe& g) const {
     for (auto f : g.getFormes()) {
         f->appliquerTransformation(*this);

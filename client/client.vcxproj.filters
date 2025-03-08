@@ -60,6 +60,9 @@
     <ClInclude Include="RotationTransformation.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Cercle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Vecteur2D.cpp">
@@ -99,6 +102,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="RotationTransformation.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Cercle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

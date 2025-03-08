@@ -3,6 +3,7 @@
 #include "Segment.h"
 #include "Polygone.h"
 #include "Groupe.h"
+#include "Cercle.h"
 
 void Translation::appliquer(Point& p) const {
     p.setPosition(p.getPosition() + deplacement);
@@ -24,4 +25,8 @@ void Translation::appliquer(Groupe& g) const {
     for (auto f : g.getFormes()) {
         f->appliquerTransformation(*this);
     }
+}
+
+void Translation::appliquer(Cercle& c) const {
+    c.setCentre(c.getCentre() + deplacement);
 }

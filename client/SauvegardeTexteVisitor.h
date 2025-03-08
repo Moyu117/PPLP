@@ -13,6 +13,7 @@ public:
     void visit(const Point& p) override;
     void visit(const Segment& s) override;
     void visit(const Polygone& p) override;
+    void visit(const Cercle& g) override;
     void visit(const Groupe& g) override;
 };
 

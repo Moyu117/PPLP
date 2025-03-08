@@ -6,7 +6,7 @@
 
 class ScaleTransformation : public Transformation {
 private:
-    double scaleFactor; // Ëõ·Å±¶Êý
+    double scaleFactor; // Facteur de zoom
 public:
     explicit ScaleTransformation(double scale) : scaleFactor(scale) {}
 
@@ -14,6 +14,7 @@ public:
     void appliquer(Segment& s) const override;
     void appliquer(Polygone& p) const override;
     void appliquer(Groupe& g) const override;
+    void appliquer(Cercle& c) const override;
 };
 
 #endif

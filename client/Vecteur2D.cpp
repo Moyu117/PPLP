@@ -4,7 +4,7 @@
 Vecteur2D::Vecteur2D(double x, double y) : x(x), y(y) {}
 
 Vecteur2D::Vecteur2D(const char* s) {
-    // 简单示例，假设格式 "( x, y )"
+    //  "( x, y )"
     sscanf(s, "(%lf,%lf)", &x, &y);
 }
 

@@ -6,7 +6,7 @@
 #include <string>
 
 /**
- * Point : 表示一个 2D 点.
+ * Point :  2D .
  */
 class Point : public Forme {
 private:

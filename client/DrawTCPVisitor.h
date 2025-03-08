@@ -10,12 +10,15 @@ private:
     int sockFd;
     bool connected;
 
-    // 发送字符串到服务器
+    // envoyer chaine a serveur
     void sendToServer(const std::string& msg);
 
 public:
     DrawTCPVisitor();
     virtual ~DrawTCPVisitor();
+    void visit(const Cercle& c) override;
+    
+
 
     void visit(const Point& p) override;
     void visit(const Segment& s) override;

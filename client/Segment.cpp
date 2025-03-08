@@ -11,7 +11,7 @@ Segment::Segment(const Vecteur2D& p1, const Vecteur2D& p2, const std::string& co
 Segment::~Segment() {}
 
 double Segment::aire() const {
-    // Ïß¶ÎÃæ»ı = 0
+    // point = 0
     return 0.0;
 }
 

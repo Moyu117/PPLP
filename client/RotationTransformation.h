@@ -7,14 +7,15 @@
 
 class RotationTransformation : public Transformation {
 private:
-    Vecteur2D center; // 旋转中心
-    double angleRad;  // 旋转角度（弧度）
+    Vecteur2D center; //centre de rotation
+    double angleRad;  // angle de rotation
 public:
     RotationTransformation(const Vecteur2D& center, double angleDeg);
 
     void appliquer(Point& p) const override;
     void appliquer(Segment& s) const override;
     void appliquer(Polygone& p) const override;
+    void appliquer(Cercle& p) const override;
     void appliquer(Groupe& g) const override;
 };
 

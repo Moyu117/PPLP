@@ -9,7 +9,7 @@ Groupe::Groupe(const std::string& coul)
 {}
 
 Groupe::~Groupe() {
-    // 由Groupe管理其子Forme的生命周期
+    // groupe gere le cycle de vie
     for (Forme* f : formes) {
         delete f;
     }

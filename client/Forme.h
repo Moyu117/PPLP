@@ -3,7 +3,7 @@
 
 #include <string>
 
-// 前置声明
+
 class DrawVisitor;
 class SauvegardeVisitor;
 class Transformation;
@@ -19,19 +19,19 @@ public:
     void setCouleur(const std::string& c) { couleur = c; }
     std::string getCouleur() const { return couleur; }
 
-    // 计算面积
+    // calcul surface
     virtual double aire() const = 0;
 
-    // 通过访问者进行绘制
+    // dessiner par visiteur
     virtual void dessiner(DrawVisitor& visitor) const = 0;
 
-    // 通过访问者进行保存
+    // stock par visiteur
     virtual void sauvegarder(SauvegardeVisitor& visitor) const = 0;
 
-    // 施加几何变换
+    // ajouter trans
     virtual void appliquerTransformation(const Transformation& t) = 0;
 
-    // 转为字符串
+    // trans en caractere
     virtual operator std::string() const = 0;
 };
 

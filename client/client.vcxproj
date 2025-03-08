@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Cercle.h" />
     <ClInclude Include="DrawTCPVisitor.h" />
     <ClInclude Include="DrawVisitor.h" />
     <ClInclude Include="Forme.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="Transformation.cpp" />
     <ClCompile Include="Translation.cpp" />
     <ClCompile Include="Vecteur2D.cpp" />
+    <ClCompile Include="Cercle.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

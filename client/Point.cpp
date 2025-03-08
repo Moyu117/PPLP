@@ -11,7 +11,7 @@ Point::Point(const Vecteur2D& pos, const std::string& couleur)
 Point::~Point() {}
 
 double Point::aire() const {
-    // 点的面积 = 0
+    // surface de point = 0
     return 0.0;
 }
 

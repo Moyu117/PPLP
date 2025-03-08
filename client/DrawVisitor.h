@@ -5,6 +5,7 @@ class Point;
 class Segment;
 class Polygone;
 class Groupe;
+class Cercle; 
 
 class DrawVisitor {
 public:
@@ -14,6 +15,7 @@ public:
     virtual void visit(const Segment& s) = 0;
     virtual void visit(const Polygone& p) = 0;
     virtual void visit(const Groupe& g) = 0;
+    virtual void visit(const Cercle& c) = 0; 
 };
 
 #endif

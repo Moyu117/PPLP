@@ -22,6 +22,7 @@ SRCS = main.cpp \
        Segment.cpp \
        Polygone.cpp \
        Point.cpp \
+	   Cercle.cpp \
        Groupe.cpp \
        Transformation.cpp \
        Translation.cpp \

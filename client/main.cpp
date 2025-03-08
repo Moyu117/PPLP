@@ -8,6 +8,7 @@
 #include "Point.h"
 #include "Segment.h"
 #include "Polygone.h"
+#include "Cercle.h"
 #include "Groupe.h"
 #include "Translation.h"
 #include "ScaleTransformation.h"
@@ -17,11 +18,11 @@
 
 using namespace std;
 
-// **控制是否只发送点**
-bool onlySendPoints = false;  // 默认发送所有形状
+// **controle si seuls les points sont envoyes**
+bool onlySendPoints = true;  
 
 /**
- * 解析 sommets.txt
+ * sommets.txt
  */
 vector<Forme*> parseSommets(const string& filename) {
     vector<Forme*> result;
@@ -46,7 +47,7 @@ vector<Forme*> parseSommets(const string& filename) {
 }
 
 /**
- * 解析 aretes.txt
+ *  aretes.txt
  */
 vector<Forme*> parseAretes(const string& filename) {
     vector<Forme*> result;
@@ -72,7 +73,7 @@ vector<Forme*> parseAretes(const string& filename) {
 }
 
 /**
- * 解析 faces.txt
+ *  faces.txt
  */
 vector<Forme*> parseFaces(const string& filename) {
     vector<Forme*> result;
@@ -101,63 +102,101 @@ vector<Forme*> parseFaces(const string& filename) {
     return result;
 }
 
+/**
+ *  cercles.txt
+ */
+vector<Forme*> parseCercles(const string& filename) {
+    vector<Forme*> result;
+    ifstream fin(filename);
+    if (!fin) {
+        cerr << "Error opening " << filename << endl;
+        return result;
+    }
+    int n;
+    fin >> n;
+    for (int i = 0; i < n; i++) {
+        int id;
+        double x, y, r;
+        fin >> id;
+        char c;
+        fin >> c >> x >> c >> y >> c >> r >> c;
+
+        Cercle* cercle = new Cercle(Vecteur2D(x, y), r, "green");
+        result.push_back(cercle);
+    }
+    return result;
+}
+
 int main() {
-    // 1. 解析三个文件
+    // 1. analyser ficher
     vector<Forme*> sommets = parseSommets("../serpent/sommets.txt");
     vector<Forme*> aretes = parseAretes("../serpent/aretes.txt");
     vector<Forme*> faces = parseFaces("../serpent/faces.txt");
+    vector<Forme*> cercles = parseCercles("../serpent/cercles.txt");
 
-    // 2. 创建 Groupe
+    // 2. creer Groupe
     Groupe* allShapes = new Groupe("red");
     for (auto f : sommets) allShapes->ajouterForme(f);
     for (auto f : aretes)  allShapes->ajouterForme(f);
     for (auto f : faces)   allShapes->ajouterForme(f);
+    for (auto f : cercles) allShapes->ajouterForme(f);
 
-    // 3. **应用缩放**
-    double scaleFactor = 100.0;  // 放大 100 倍
+    // 3. **calcul surface initiale**
+    double totalArea = allShapes->aire();
+    cout << "Original Area: " << totalArea << endl;
+
+    // 4. **zoom**
+    double scaleFactor = 100.0;  // x100
     ScaleTransformation scale(scaleFactor);
     allShapes->appliquerTransformation(scale);
 
-    // 4. **应用平移**
-    Vecteur2D translation(0.0, 0.0);  // 平移 (0,0)
+    // 5. **calculer apres zoom**
+    double scaledArea = totalArea * scaleFactor * scaleFactor;
+    cout << "Scaled Area (Factor " << scaleFactor << "): " << scaledArea << endl;
+
+    // 6. **translation**
+    Vecteur2D translation(0.0, 0.0);  // (0,0)
     Translation trans(translation);
     allShapes->appliquerTransformation(trans);
 
-    // 5. **应用旋转**
-    Vecteur2D rotationCenter(0.0, 0.0);  // **旋转中心 (0,0)**
-    double rotationAngle = 45.0;  // **旋转角度 45°**
+    // 7. **rotation**
+    Vecteur2D rotationCenter(0.0, 0.0);  // **centre (0,0)**
+    double rotationAngle = 45.0;  // **angle 45°**
     RotationTransformation rotate(rotationCenter, rotationAngle);
     allShapes->appliquerTransformation(rotate);
 
-    // 6. **发送到服务器**
+    // 8. **envoyer a serveur**
     {
         DrawTCPVisitor visitor;
 
         if (onlySendPoints) {
             cout << "Mode: Only sending points" << endl;
             for (auto f : sommets) {
-                f->dessiner(visitor);  // **只发送点**
+                f->dessiner(visitor);
             }
         }
         else {
             cout << "Mode: Sending all shapes" << endl;
-            allShapes->dessiner(visitor);  // **发送所有形状**
+            allShapes->dessiner(visitor);
         }
     }
 
-    // 7. **保存到本地**
+    // 9. **stoker info**
     {
         ofstream fout("output.txt");
         SauvegardeTexteVisitor stv(fout);
         allShapes->sauvegarder(stv);
+        fout << "Original Area: " << totalArea << endl;
+        fout << "Scaled Area (Factor " << scaleFactor << "): " << scaledArea << endl;
         fout.close();
     }
 
-    // 8. **释放内存**
+    // 10. **clean **
     delete allShapes;
     sommets.clear();
     aretes.clear();
     faces.clear();
+    cercles.clear();
 
     return 0;
 }

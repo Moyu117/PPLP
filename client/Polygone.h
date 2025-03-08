@@ -8,7 +8,7 @@
 
 class Polygone : public Forme {
 private:
-    std::vector<Vecteur2D> points; // ¶à±ßÐÎ¶¥µã
+    std::vector<Vecteur2D> points; //sommets du polygone
 
 public:
     Polygone(const std::vector<Vecteur2D>& pts, const std::string& couleur = "black");

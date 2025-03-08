@@ -20,13 +20,13 @@ public:
     Vecteur2D operator*(double a) const;
     Vecteur2D operator-() const;
 
-    // 转为字符串
+    // trans en string
     operator std::string() const;
 
-    // 打印
+    // afficher
     friend std::ostream& operator << (std::ostream& os, const Vecteur2D& u);
 
-    // 行列式(用于多边形/三角形面积计算)
+    // Déterminant (pour le calcul de la surface d'un polygone)
     static double determinant(const Vecteur2D& u, const Vecteur2D& v);
 };
 

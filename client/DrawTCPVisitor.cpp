@@ -3,6 +3,7 @@
 #include "Segment.h"
 #include "Polygone.h"
 #include "Groupe.h"
+#include "Cercle.h"
 #include "NetworkInitializer.h"
 
 
@@ -95,7 +96,7 @@ void DrawTCPVisitor::sendToServer(const std::string& msg) {
     std::cout << "[TCP SEND] " << msg << std::endl;
 }
 
-// 访问Point时的处理：发送 "DRAW_POINT x y color"
+// point:"DRAW_POINT x y color"
 void DrawTCPVisitor::visit(const Point& p) {
     std::string cmd = "DRAW_POINT "
         + std::to_string(p.getPosition().x) + " "
@@ -104,7 +105,7 @@ void DrawTCPVisitor::visit(const Point& p) {
     sendToServer(cmd);
 }
 
-// 访问Segment时: "DRAW_SEGMENT x1 y1 x2 y2 color"
+//segment:"DRAW_SEGMENT x1 y1 x2 y2 color"
 void DrawTCPVisitor::visit(const Segment& s) {
     std::string cmd = "DRAW_SEGMENT "
         + std::to_string(s.getP1().x) + " "
@@ -115,7 +116,7 @@ void DrawTCPVisitor::visit(const Segment& s) {
     sendToServer(cmd);
 }
 
-// 访问Polygone时: "DRAW_POLYGONE n x1 y1 x2 y2 ... xn yn color"
+// polygone: "DRAW_POLYGONE n x1 y1 x2 y2 ... xn yn color"
 void DrawTCPVisitor::visit(const Polygone& poly) {
     const auto& pts = poly.getPoints();
     std::string cmd = "DRAW_POLYGONE " + std::to_string(pts.size());
@@ -126,7 +127,7 @@ void DrawTCPVisitor::visit(const Polygone& poly) {
     sendToServer(cmd);
 }
 
-// 访问Groupe时, 设置组的颜色到每个子元素再让其绘制
+//Groupe, mettre coleur
 void DrawTCPVisitor::visit(const Groupe& g) {
     for (auto f : g.getFormes()) {
         std::string oldC = f->getCouleur();
@@ -134,4 +135,15 @@ void DrawTCPVisitor::visit(const Groupe& g) {
         f->dessiner(*this);
         f->setCouleur(oldC);
     }
+}
+
+
+//cercle: DRAW_CERCLE x y R couleur
+void DrawTCPVisitor::visit(const Cercle& c) {
+    std::string cmd = "DRAW_CERCLE "
+        + std::to_string(c.getCentre().x) + " "
+        + std::to_string(c.getCentre().y) + " "
+        + std::to_string(c.getRayon()) + " "
+        + c.getCouleur();
+    sendToServer(cmd);
 }
