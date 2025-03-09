@@ -1,5 +1,5 @@
 /**
- * 记录要绘制的形状信息：类型(type)、颜色(color)以及坐标(xs, ys)数组
+ * enregistrez les informations de forme à dessiner : tableau de type (type), de couleur (couleur) et de coordonnées (xs, ys).
  */
 public class Shape2D {
     public ShapeType type;
