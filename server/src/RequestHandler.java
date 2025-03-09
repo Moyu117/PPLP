@@ -11,8 +11,8 @@ public abstract class RequestHandler {
     }
 
     /**
-     * 责任链的处理逻辑。
-     * 如果当前处理器不匹配或处理不了，需要调用 next.handle(request)。
+     * la logique de traitement de la chaine de responsabilite.
+     * si le processeur actuel ne correspond pas ou ne peut pas le gérer, il doit appeler next.handle(request)
      */
     public void handle(String request) {
         if (next != null) {
