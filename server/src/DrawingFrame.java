@@ -7,8 +7,8 @@ import java.util.List;
 public class DrawingFrame extends Frame {
 
     private final List<Shape2D> shapes = new ArrayList<>();
-    private int centerX, centerY; // 画布中心点（坐标原点）
-    private boolean fillShapes = false; // **默认不填充**
+    private int centerX, centerY; // centre (0,0)
+    private boolean fillShapes = false; // **Non renseigné par défaut**
 
     public DrawingFrame(String title) {
         super(title);
@@ -21,7 +21,7 @@ public class DrawingFrame extends Frame {
             }
         });
 
-        // **按 F 键切换填充模式**
+        // **f change modele**
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -48,11 +48,11 @@ public class DrawingFrame extends Frame {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // 计算画布中心点
+        // calcul le centre de graph
         centerX = getWidth() / 2;
         centerY = getHeight() / 2;
 
-        // **绘制坐标轴**
+        // **draw**
         drawAxes(g2);
 
         synchronized (shapes) {
@@ -82,14 +82,14 @@ public class DrawingFrame extends Frame {
     }
 
     /**
-     * **绘制坐标轴**
+     * **dessiner des axe**
      */
     private void drawAxes(Graphics2D g2) {
         g2.setColor(Color.GRAY);
-        g2.drawLine(0, centerY, getWidth(), centerY); // X 轴
-        g2.drawLine(centerX, 0, centerX, getHeight()); // Y 轴
+        g2.drawLine(0, centerY, getWidth(), centerY); // X 
+        g2.drawLine(centerX, 0, centerX, getHeight()); // Y 
 
-        // 标记轴的方向
+        // Marquer la direction de l'axe
         g2.drawString("+X", getWidth() - 20, centerY - 5);
         g2.drawString("-X", 10, centerY - 5);
         g2.drawString("+Y", centerX + 5, 15);
@@ -99,7 +99,7 @@ public class DrawingFrame extends Frame {
     private void drawPoint(Graphics g, double x, double y) {
         int px = (int) toScreenX(x);
         int py = (int) toScreenY(y);
-        g.fillOval(px - 2, py - 2, 4, 4); // **确保点的中心对齐**
+        g.fillOval(px - 2, py - 2, 4, 4); // **Assurez les centre des point sont aligne**
     }
 
     private void drawSegment(Graphics2D g2, double[] xs, double[] ys) {
@@ -117,12 +117,12 @@ public class DrawingFrame extends Frame {
         double r = xs[1];
 
         if (fillShapes) {
-            // **填充淡蓝色**
-            g2.setColor(new Color(173, 216, 230, 150)); // **淡蓝色 + 半透明**
+            // **couleur cyan**
+            g2.setColor(new Color(173, 216, 230, 150)); // **bleu clair + translucide**
             g2.fill(new Ellipse2D.Double(cx - r, cy - r, 2 * r, 2 * r));
         }
 
-        // **用原本的颜色绘制边框**
+        // **Dessinez la bordure avec la couleur d'origine**
         g2.setColor(parseColor(originalColor));
         g2.draw(new Ellipse2D.Double(cx - r, cy - r, 2 * r, 2 * r));
     }
@@ -138,22 +138,22 @@ public class DrawingFrame extends Frame {
         }
 
         if (fillShapes) {
-            // **填充淡蓝色**
-            g2.setColor(new Color(0, 0, 139, 150)); // **淡蓝色 + 半透明**
+            // **Remplir en bleu clair**
+            g2.setColor(new Color(0, 0, 139, 150)); // **bleu clair + translucide**
             g2.fillPolygon(xPoints, yPoints, n);
         }
 
-        // **用原本的颜色绘制边框**
+        // **Dessinez la bordure avec la couleur d'origine**
         g2.setColor(parseColor(originalColor));
         g2.drawPolygon(xPoints, yPoints, n);
     }
 
     private double toScreenX(double x) {
-        return centerX + x;  // **确保 x 轴方向正确**
+        return centerX + x;  // **Assurezque l'axe X est correctement orienté**
     }
 
     private double toScreenY(double y) {
-        return centerY - y;  // **确保 y 轴翻转**
+        return centerY - y;  // **Assurezque l'axe Y est inversé**
     }
 
     private Color parseColor(String col) {
