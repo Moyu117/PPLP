@@ -12,16 +12,16 @@ public class DrawingServer {
 
     public DrawingServer(int port) {
         this.port = port;
-        // 创建 AWT Frame
+        // creer AWT Frame
         drawingFrame = new DrawingFrame("AWT Frame Drawing Demo");
 
-        // 构造责任链
+        // construire une chaîne de responsabilité
         RequestHandler pointHandler   = new DrawPointHandler(drawingFrame);
         RequestHandler segHandler     = new DrawSegmentHandler(drawingFrame);
         RequestHandler cercleHandler  = new DrawCercleHandler(drawingFrame);
         RequestHandler polyHandler    = new DrawPolygoneHandler(drawingFrame);
 
-        // 串起来
+        // connecter
         pointHandler.setNext(segHandler);
         segHandler.setNext(cercleHandler);
         cercleHandler.setNext(polyHandler);
@@ -36,7 +36,7 @@ public class DrawingServer {
             while(true) {
                 Socket client = serverSocket.accept();
                 System.out.println("[SERVER] Client connected: " + client);
-                // 启动线程处理该客户端
+                // utliser  thead pour traiter le client
                 new Thread(() -> handleClient(client)).start();
             }
         } catch(IOException e) {
@@ -51,10 +51,11 @@ public class DrawingServer {
         {
             String line;
             while((line = in.readLine()) != null) {
-                // 每次读取一行指令就打印一下
+                // chaque fois qu'une ligne d'instructions est lue, imprimez-la
+                //pour tester
                 System.out.println("[SERVER] Received line: " + line);
 
-                // 交给责任链处理
+                // aller chaîne de responsabilité
                 chain.handle(line);
             }
         } catch(IOException e) {
